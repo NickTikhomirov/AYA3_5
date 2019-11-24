@@ -32,15 +32,10 @@ find_package(GTest CONFIG REQUIRED)
 
 
 
-add_library(shared STATIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/SharedPtr.cpp
+add_library(stack1 STATIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/SimpleStack.cpp
 )
 
-
-
-add_executable(lr
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/source.cpp
-)
 
 add_executable(tests
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test.cpp
@@ -48,10 +43,7 @@ add_executable(tests
 
 
 
-target_include_directories(shared
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_include_directories(lr
+target_include_directories(stack1
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_include_directories(tests 
@@ -59,8 +51,7 @@ target_include_directories(tests
 )
 
 
-target_link_libraries(tests GTest::main shared)
-target_link_libraries(lr shared)
+target_link_libraries(tests GTest::main stack1)
 
 enable_testing()
 add_test(NAME unit_tests COMMAND tests) 
