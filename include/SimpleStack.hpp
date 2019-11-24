@@ -4,7 +4,7 @@
 #define INCLUDE_HEADER_HPP_
 
 #include <utility>
-
+#include <stdexcept>
 
 
 template <typename T>
@@ -36,7 +36,6 @@ class SimpleStack
 	void operator=(const SimpleStack& a) {}
 	Node* top = nullptr;
 
-
 public:
 	SimpleStack() {}
 	SimpleStack(T&& value) {
@@ -50,19 +49,22 @@ public:
 		r.top = nullptr;
 	}
 	void operator=(SimpleStack&& r) {
+		if (this == &r) return;
+		~SimpleStack();
 		top = r.top;
 		r.top = nullptr;
 	}
 	void push(T&& value) { top = Node::create(std::move(value), top);}
 	void push(const T& value) {	top = Node::create(value, top);}
 	void pop() {
+		if (top == nullptr) return;
 		Node* temp = top;
 		top = temp->next;
 		temp->next = nullptr;
 		delete temp;
 	}
 	const T& head() const {	
-		if (top == nullptr) return 0;
+		if (top == nullptr) throw std::logic_error{ "The stack is empty!" };
 		return top->data;
 	}
 	~SimpleStack() {
@@ -70,6 +72,9 @@ public:
 			delete top;
 			top = nullptr;
 		}
+	}
+	operator bool() const{
+		return top != nullptr;
 	}
 };
 
