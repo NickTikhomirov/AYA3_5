@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include "SimpleStack.hpp"
+#include "Stack.hpp"
 #include <string>
 
 TEST(Stack1_base, push_pop_head) {
@@ -52,3 +53,63 @@ TEST(Stack1_advanced, Except) {
 	EXPECT_TRUE(flag);
 }
 
+TEST(Stack2_base, push_pop_head) {
+	SimpleStack<int> s;
+	SimpleStack<int> s1;
+	s.push(1234);
+	s1.push(3456);
+	Stack<SimpleStack<int>> r;
+	EXPECT_TRUE(!r);
+	r.push(std::move(s));
+	EXPECT_EQ(r.head().head(), 1234);
+	r.push(std::move(s1));
+	EXPECT_EQ(r.head().head(), 3456);
+	EXPECT_TRUE(!s);
+	s = std::move(r.pop());
+	EXPECT_EQ(r.head().head(), 1234);
+	EXPECT_EQ(s.head(), 3456);
+}
+
+TEST(Stack2_base, Constructors) {
+	SimpleStack<int> s;
+	SimpleStack<int> s1;
+	s.push(1234);
+	s1.push(3456);
+	Stack<SimpleStack<int>> r(std::move(s));
+	EXPECT_EQ(r.head().head(), 1234);
+	r.push(std::move(s1));
+	EXPECT_EQ(r.head().head(), 3456);
+}
+
+TEST(Stack2_advanced, Move) {
+	SimpleStack<int> s;
+	s.push(1234);
+	Stack<SimpleStack<int>> r(std::move(s));
+	Stack<SimpleStack<int>> p(std::move(r));
+	EXPECT_TRUE(!r);
+	EXPECT_EQ(p.head().head(),1234);
+	r = std::move(p);
+	EXPECT_TRUE(!p);
+	EXPECT_EQ(r.head().head(), 1234);
+}
+
+TEST(Stack2_advanced, Self) {
+	SimpleStack<int> s;
+	s.push(1234);
+	Stack<SimpleStack<int>> r(std::move(s));
+	r = std::move(r);
+	EXPECT_EQ(r.head().head(), 1234);
+}
+
+TEST(Stack2_advanced, Except) {
+	bool flag = false;
+	Stack<Stack<int>> r;
+	try {
+		r.head();
+	}
+	catch (std::exception & e) {
+		EXPECT_EQ(std::string(e.what()), "The stack is empty!");
+		flag = true;
+	}
+	EXPECT_TRUE(flag);
+}

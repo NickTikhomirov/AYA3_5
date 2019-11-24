@@ -35,6 +35,9 @@ find_package(GTest CONFIG REQUIRED)
 add_library(stack1 STATIC
   ${CMAKE_CURRENT_SOURCE_DIR}/sources/SimpleStack.cpp
 )
+add_library(stack2 STATIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/Stack.cpp
+)
 
 
 add_executable(tests
@@ -46,12 +49,15 @@ add_executable(tests
 target_include_directories(stack1
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+target_include_directories(stack2
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 target_include_directories(tests 
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 
-target_link_libraries(tests GTest::main stack1)
+target_link_libraries(tests GTest::main stack1 stack2)
 
 enable_testing()
 add_test(NAME unit_tests COMMAND tests) 
