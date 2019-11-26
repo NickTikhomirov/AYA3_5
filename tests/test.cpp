@@ -4,6 +4,7 @@
 #include "SimpleStack.hpp"
 #include "Stack.hpp"
 #include <string>
+#include <type_traits>
 
 struct for_emplace {
 	int a = 0;
@@ -142,3 +143,9 @@ TEST(Stack2_advanced, Except) {
 	EXPECT_TRUE(flag);
 }
 
+TEST(Stack_1_2, thatThing) {
+	EXPECT_TRUE(std::is_move_constructible<SimpleStack<int>>());
+	EXPECT_TRUE(std::is_move_constructible<Stack<SimpleStack<int>>>());
+	EXPECT_TRUE(std::is_move_assignable<SimpleStack<int>>());
+	EXPECT_TRUE(std::is_move_assignable<Stack<SimpleStack<int>>>());
+}
