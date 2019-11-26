@@ -5,6 +5,27 @@
 #include "Stack.hpp"
 #include <string>
 
+struct for_emplace {
+	int a = 0;
+	std::string s;
+	for_emplace() {}
+	for_emplace(std::string p, int r) {
+		a = r;
+		s = p;
+	}
+	for_emplace(for_emplace&& r) {
+		a = r.a;
+		s = std::move(r.s);
+	}
+	void operator=(for_emplace&& r) {
+		a = r.a;
+		s = std::move(r.s);
+	}
+private:
+	for_emplace(const for_emplace&);
+	void operator=(const for_emplace&);
+};
+
 TEST(Stack1_base, push_pop_head) {
 	SimpleStack<int> s;
 	s.push(1);
@@ -70,6 +91,13 @@ TEST(Stack2_base, push_pop_head) {
 	EXPECT_EQ(s.head(), 3456);
 }
 
+TEST(Stack2_base, emplace) {
+	Stack<for_emplace> tester;
+	tester.push_emplace("hello",90);
+	EXPECT_EQ(tester.head().a, 90);
+	EXPECT_EQ(tester.head().s, std::string("hello"));
+}
+
 TEST(Stack2_base, Constructors) {
 	SimpleStack<int> s;
 	SimpleStack<int> s1;
@@ -113,3 +141,4 @@ TEST(Stack2_advanced, Except) {
 	}
 	EXPECT_TRUE(flag);
 }
+

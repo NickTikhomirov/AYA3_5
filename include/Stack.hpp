@@ -13,9 +13,9 @@ class Stack
 	struct Node {
 		T data;
 		Node* next = nullptr;
-		Node(T&& arg) {	data = std::move(arg); }
+		Node(T&& arg) {	data = std::forward<T>(arg); }
 		static Node* create(T&& arg, Node* pointer) {
-			Node* n = new Node(std::move(arg));
+			Node* n = new Node(std::forward<T>(arg));
 			n->next = pointer;
 			return n;
 		}
@@ -33,7 +33,7 @@ class Stack
 public:
 	Stack() {}
 	Stack(T&& value) {
-		push(std::move(value));
+		push(std::forward<T>(value));
 	}
 	Stack(Stack&& r) {
 		top = r.top;
@@ -45,10 +45,11 @@ public:
 		top = r.top;
 		r.top = nullptr;
 	}
-	void push(T&& value) { top = Node::create(std::move(value), top);}
+	void push(T&& value) { top = Node::create(std::forward<T>(value), top);}
 	template<typename ... Args>
 	void push_emplace(Args&& ...value) {
-		top = Node::create({ std::forward<Args>(value)... },top);
+		T object_brrrrr{ std::forward<Args>(value)... };
+		top = Node::create(std::move(object_brrrrr),top);
 	}
 	T pop() {
 		if (top == nullptr) throw std::logic_error{ "The stack is empty!" };
